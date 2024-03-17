@@ -50,7 +50,7 @@ def set_print_header():
 
     # Example: setting a timestamp-based version for the release
     release_version = time.strftime("%Y.%m.%d-%H%M%S")
-    os.environ['RELEASE_VERSION'] = release_version
+    os.environ['PIPELINE_RELEASE_VERSION'] = release_version
 
     # Calculate padding for centered text
     line_length = 60
@@ -67,7 +67,7 @@ def set_print_header():
     print(centered_title)
     print("-" * line_length)
     print(f"\033[36mPIPELINE_ID set to:\033[0m \033[33m{pipeline_id}\033[0m")
-    print(f"\033[36mRELEASE_VERSION set to:\033[0m \033[33m{release_version}\033[0m")
+    print(f"\033[36mPIPELINE_RELEASE_VERSION set to:\033[0m \033[33m{release_version}\033[0m")
     print("-" * line_length)
 
 def main():
