@@ -1,7 +1,5 @@
 # Pipeline CLI
 
-## Description
-
 This project automates workflows similar to CI/CD processes, allowing users to define and execute build, test, deploy, and undeploy stages through a YAML-configured pipeline and a command-line interface.
 
 ## Features
@@ -37,6 +35,16 @@ pipeline <action> [-d <directory>] [-f <file>]
 - `<action>`: The pipeline stage (build, test, deploy, undeploy).
 - `-d <directory>`: Directory containing `pipeline.yaml` (default: current directory).
 - `-f <file>`: The pipeline configuration file (default: `pipeline.yaml`).
+
+### Basic Usage Examples
+While in a directory that contains a pipeline.yaml:
+```
+pipeline build
+```
+Or run multiple stages in order:
+```
+pipeline build test deploy
+```
 
 ## Configuring `pipeline.yaml`
 
