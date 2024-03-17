@@ -32,7 +32,7 @@ pip install .
 
 Execute a pipeline stage:
 pipeline <action> [-d <directory>] [-f <file>]
-- `<action>`: The pipeline stage (build, test, deploy, undeploy).
+- `<action>`: The pipeline stage (`build`, `test`, `deploy`, `undeploy`).
 - `-d <directory>`: Directory containing `pipeline.yaml` (default: current directory).
 - `-f <file>`: The pipeline configuration file (default: `pipeline.yaml`).
 
