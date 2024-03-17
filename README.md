@@ -1,4 +1,4 @@
-# Project Name
+# Pipeline CLI
 
 ## Description
 
