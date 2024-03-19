@@ -90,7 +90,7 @@ def main():
     
     # Setup arguments for parsing from executable calls
     parser = argparse.ArgumentParser(description='Pipeline CLI')
-    parser.add_argument('action', nargs='+', choices=['build', 'test', 'deploy', 'undeploy'], help='Action(s) to perform')
+    parser.add_argument('action', nargs='+', choices=['setup', 'test','build', 'deploy', 'undeploy'], help='Action(s) to perform')
     parser.add_argument('-d', '--directory', default='.', help='Specify the directory where the pipeline.yaml is located. Defaults to the current directory.')
     parser.add_argument('-f', '--file', default='pipeline.yaml', help='Specify the pipeline configuration file name. Defaults to "pipeline.yaml".')
     
@@ -106,7 +106,7 @@ def main():
         config = load_pipeline_config(directory=args.directory, filename=args.file)
 
         # Separate variables from action stages
-        variables = {k: v for k, v in config.items() if k not in ['test', 'build', 'deploy', 'undeploy']}
+        variables = {k: v for k, v in config.items() if k not in ['setup', 'test', 'build', 'deploy', 'undeploy']}
         stage_commands = config.get(action, [])
 
         # Run commands including nested calls
