@@ -22,20 +22,28 @@ def load_pipeline_config(directory=".", filename="pipeline.yaml"):
         print(f"\033[91m\nError: The file {filepath} was not found.\n\033[0m")
         sys.exit(1)
 
+def flatten(lst):
+    for item in lst:
+        if isinstance(item, list):
+            # If the item is a list, yield from its flattened form
+            yield from flatten(item)
+        else:
+            # Otherwise, yield the item itself
+            yield item
+
 def run_commands(stage_commands, variables, working_directory="."):
     original_directory = os.getcwd()
     try:
         os.chdir(working_directory)
-        for command_template in stage_commands:
+        # Flatten the stage_commands to handle nested lists
+        for command_template in flatten(stage_commands):
             command = command_template
             # Substitute variables
             for key, value in variables.items():
-                command = command.replace('${' + key + '}', value)
+                command = command.replace('${' + key + '}', str(value))  # Ensure value is a string
             
-            # Print the command being executed
-            print(f"\033[36m\nExecuting command: \033[33m{command}\033[0m")  
+            print(f"\033[36m\nExecuting command: \033[33m{command}\033[0m")
             
-            # Execute the command, directing output directly to the console
             process = subprocess.run(command, shell=True, text=True)
             if process.returncode != 0:
                 print(f"\033[91m\nError: Command '{command}' exited with return code {process.returncode}\n\033[0m")
@@ -74,18 +82,18 @@ def main():
     # Determine if this is the top-level call based on a special flag
     top_level_call = 'PIPELINE_CLI_TOP_LEVEL' not in os.environ
     
+    # If this is the top-level call, set up environment variables and print the header
+    if top_level_call:
+        # Indicate that this and any nested calls are not the top-level call
+        os.environ['PIPELINE_CLI_TOP_LEVEL'] = 'false'
+        set_print_header()    
+    
     parser = argparse.ArgumentParser(description='Pipeline CLI')
     parser.add_argument('action', nargs='+', choices=['build', 'test', 'deploy', 'undeploy'], help='Action(s) to perform')
     parser.add_argument('-d', '--directory', default='.', help='Specify the directory where the pipeline.yaml is located. Defaults to the current directory.')
     parser.add_argument('-f', '--file', default='pipeline.yaml', help='Specify the pipeline configuration file name. Defaults to "pipeline.yaml".')
     
     args = parser.parse_args()
-
-    # If this is the top-level call, set up environment variables and print the header
-    if top_level_call:
-        # Indicate that this and any nested calls are not the top-level call
-        os.environ['PIPELINE_CLI_TOP_LEVEL'] = 'false'
-        set_print_header()    
 
     for action in args.action:        
         config = load_pipeline_config(directory=args.directory, filename=args.file)

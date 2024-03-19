@@ -101,6 +101,32 @@ build:
   - echo ${MY_VARIABLE}
 ```
 
+### Reusing Commands with YAML Anchors and Aliases
+
+YAML anchors (`&`) and aliases (`*`) allow you to define a block of commands once and reuse them elsewhere in your YAML file. This is useful for common setup, teardown, or utility operations that need to be repeated across different stages.
+
+#### Defining Reusable Command Blocks
+
+You can define a reusable block with an anchor (`&`), and then reference it with an alias (`*`) in one or more stages:
+
+```yaml
+custom_setup: &custom_setup
+  - command1
+  - command2
+
+build: 
+  - *custom_setup
+  - build_command
+
+deploy: 
+  - *custom_setup
+  - deploy_command
+```
+
+This setup defines a list of commands under `custom_setup` using an anchor named `custom_setup`. Both `build` and `deploy` stages then reuse these commands via the `*custom_setup` alias, followed by stage-specific commands.
+
+Using variables, environment variables, and YAML anchors and aliases, you can create flexible and maintainable pipeline configurations that adapt to different needs and environments with minimal duplication.
+
 ## Contributing
 
 Contributions are welcome! Please fork the repository and open a pull request with your changes.
