@@ -95,11 +95,15 @@ def main():
     
     args = parser.parse_args()
 
-    for action in args.action:        
+    for action in args.action:
+        # Print some information about stage for top level stage calls
+        if top_level_call:
+            print(f"\033[36m\nExecuting stage: \033[95m{action}\033[0m")
+            
         config = load_pipeline_config(directory=args.directory, filename=args.file)
 
         # Separate variables from action stages
-        variables = {k: v for k, v in config.items() if k not in ['build', 'test', 'deploy', 'undeploy']}
+        variables = {k: v for k, v in config.items() if k not in ['test', 'build', 'deploy', 'undeploy']}
         stage_commands = config.get(action, [])
 
         run_commands(stage_commands, variables, working_directory=args.directory)
