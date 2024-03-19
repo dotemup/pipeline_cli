@@ -88,26 +88,31 @@ def main():
         os.environ['PIPELINE_CLI_TOP_LEVEL'] = 'false'
         set_print_header()    
     
+    # Setup arguments for parsing from executable calls
     parser = argparse.ArgumentParser(description='Pipeline CLI')
     parser.add_argument('action', nargs='+', choices=['build', 'test', 'deploy', 'undeploy'], help='Action(s) to perform')
     parser.add_argument('-d', '--directory', default='.', help='Specify the directory where the pipeline.yaml is located. Defaults to the current directory.')
     parser.add_argument('-f', '--file', default='pipeline.yaml', help='Specify the pipeline configuration file name. Defaults to "pipeline.yaml".')
     
+    # Parse arguments given to cli
     args = parser.parse_args()
 
     for action in args.action:
         # Print some information about stage for top level stage calls
         if top_level_call:
             print(f"\033[36m\nExecuting stage: \033[95m{action}\033[0m")
-            
+
+        # Load yaml config from file
         config = load_pipeline_config(directory=args.directory, filename=args.file)
 
         # Separate variables from action stages
         variables = {k: v for k, v in config.items() if k not in ['test', 'build', 'deploy', 'undeploy']}
         stage_commands = config.get(action, [])
 
+        # Run commands including nested calls
         run_commands(stage_commands, variables, working_directory=args.directory)
 
+    # Clean up flags and print completion information
     if top_level_call:
         del os.environ['PIPELINE_CLI_TOP_LEVEL']
         print("\033[95m\nPipeline execution completed.\n\033[0m")
