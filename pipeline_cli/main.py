@@ -93,23 +93,26 @@ def main():
     parser.add_argument('action', nargs='+', choices=['setup', 'test', 'build', 'deploy', 'undeploy'], help='Action(s) to perform')
     parser.add_argument('-d', '--directory', default='.', help='Specify the directory where the pipeline.yaml is located. Defaults to the current directory.')
     parser.add_argument('-f', '--file', default='pipeline.yaml', help='Specify the pipeline configuration file name. Defaults to "pipeline.yaml".')
+    parser.add_argument('--rollback', action='store_true', help='Execute the rollback stage for the specified action(s).')
     
     # Parse arguments given to cli
     args = parser.parse_args()
 
     for action in args.action:
-        # Print some information about stage for top level stage calls
+        # Determine if the rollback flag is set and construct the stage name accordingly
+        stage_name = f"{action}.rollback" if args.rollback else action
+        
         if top_level_call:
-            print(f"\033[36m\nExecuting stage: \033[95m{action}\033[0m")
-
-        # Load yaml config from file
+            # Print stage execution info, taking into account the rollback flag
+            action_display_name = f"{action} (rollback)" if args.rollback else action
+            print(f"\033[36m\nExecuting stage: \033[95m{action_display_name}\033[0m")
+        
         config = load_pipeline_config(directory=args.directory, filename=args.file)
 
-        # Separate variables from action stages
-        variables = {k: v for k, v in config.items() if k not in ['setup', 'test', 'build', 'deploy', 'undeploy']}
-        stage_commands = config.get(action, [])
+        # Use the modified stage name to get the appropriate commands from the config
+        variables = {k: v for k, v in config.items() if not k.endswith('.rollback')}
+        stage_commands = config.get(stage_name, [])
 
-        # Run commands including nested calls
         run_commands(stage_commands, variables, working_directory=args.directory)
 
     # Clean up flags and print completion information
