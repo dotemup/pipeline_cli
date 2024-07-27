@@ -31,10 +31,11 @@ pip install .
 ## Usage
 
 Execute a pipeline stage:
-pipeline <action> [-d <directory>] [-f <file>]
-- `<action>`: The pipeline stage (`build`, `test`, `deploy`, `undeploy`).
+pipeline <action> [-d <directory>] [-f <file>] [--rollback]
+- `<action>`: The pipeline stage (`setup`, `build`, `test`, `deploy`, `undeploy`).
 - `-d <directory>`: Directory containing `pipeline.yaml` (default: current directory).
 - `-f <file>`: The pipeline configuration file (default: `pipeline.yaml`).
+- `--rollback`: Execute the rollback stage for the specified action(s).
 
 ### Basic Usage Examples
 While in a directory that contains a pipeline.yaml:
@@ -48,11 +49,13 @@ pipeline build test deploy
 
 ## Configuring `pipeline.yaml`
 
-The `pipeline.yaml` file defines the steps to be executed for each stage of your pipeline, such as build, test, deploy, and undeploy. Here's how to structure your `pipeline.yaml`:
+The `pipeline.yaml` file defines the steps to be executed for each stage of your pipeline. Available stages are: setup, build, test, deploy, and undeploy. Here's how to structure your `pipeline.yaml`:
 
 ### Basic Structure
 
 ```yaml
+setup: 
+  - echo "Installing dependencies"
 build:
   - echo "Building project"
 test:
@@ -72,6 +75,9 @@ For instance, if you have a primary pipeline that requires executing a secondary
 This approach enables you to modularize your workflows, making them more manageable and reusable across different projects or environments. Remember, when designing nested calls, to ensure that your pipelines are structured in a way that avoids circular dependencies to prevent infinite execution loops.
 
 ```yaml
+setup:
+  - pipeline setup -d some_subdir
+  - pipeline setup -d another_subdir -f setup.yaml
 build:
   - pipeline build -d some_subdir
   - pipeline build -d another_subdir -f build.yaml
