@@ -158,6 +158,29 @@ This setup defines a list of commands under `custom_setup` using an anchor named
 
 Using variables, environment variables, and YAML anchors and aliases, you can create flexible and maintainable pipeline configurations that adapt to different needs and environments with minimal duplication.
 
+### Rollback Modifier
+
+The `.rollback` modifier can be used after a build stage and is triggered with the `--rollback` argument when executing the pipeline. This is particularly handy for failed builds, allowing you to quickly rollback without undeploying the entire application.
+
+#### Rollback Usage
+
+To define a rollback stage in your pipeline, add the `.rollback` modifier after a build stage. Here’s an example:
+
+```yaml
+build:
+  - echo "Building application..."
+build.rollback:
+  - echo "Rolling back to the previous version..."
+```
+
+You can trigger the rollback stage by executing the pipeline with the --rollback argument:
+
+```sh
+pipeline build --rollback
+```
+
+Combine this with the predefined environment variables or your own and it can be very powerful.
+
 ## Contributing
 
 Contributions are welcome! Please fork the repository and open a pull request with your changes.
