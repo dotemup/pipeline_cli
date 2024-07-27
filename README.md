@@ -108,6 +108,15 @@ build:
   - echo "%TEST% world"
 ```
 
+#### Predefined Environment Variables
+
+The following environment variables are set at the start of each pipeline execution and can be used as needed:
+
+- `PIPELINE_ID`: A unique identifier for the current pipeline execution.
+- `PIPELINE_RELEASE_VERSION`: The release version of the current pipeline execution.
+
+These variables are automatically populated and can be accessed in your scripts. Useful for automatically setting unique build tags and handy for logging.
+
 ### YAML Variables
 
 In `pipeline.yaml`, you can define variables and reusable content to simplify your configuration and avoid duplication. This section explains how to use generic YAML properties and anchors, and how to reference them within your pipeline configuration.
