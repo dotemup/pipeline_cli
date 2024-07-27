@@ -86,6 +86,28 @@ undeploy:
   - pipeline undeploy -d another_subdir -f undeploy.yaml
 ```
 
+### Environment Variables
+
+The `pipeline_cli` tool can utilize environment variables if they are set before running the pipeline. This functionality is supported on both Unix-like systems and Windows.
+
+#### Unix-like Systems
+
+In Unix-like systems, environment variables can be set using the `export` command and are interpreted with the `$ENV` format. Here’s an example where the `TEST` variable is set to `hello` and then used to print `hello world`.
+
+```yaml
+build:
+  - echo "$TEST world"
+```
+
+#### Windows
+
+In Windows, environment variables can be set using the `set` command and are interpreted with the `%ENV%` format. Here’s an example where the TEST variable is set to hello and then used to print hello world.
+
+```yaml
+build:
+  - echo "%TEST% world"
+```
+
 ### YAML Variables
 
 In `pipeline.yaml`, you can define variables and reusable content to simplify your configuration and avoid duplication. This section explains how to use generic YAML properties and anchors, and how to reference them within your pipeline configuration.
