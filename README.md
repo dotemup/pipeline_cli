@@ -166,11 +166,11 @@ Using variables, environment variables, and YAML anchors and aliases, you can cr
 
 ### Rollback Modifier
 
-The `.rollback` modifier can be used after a build stage and is triggered with the `--rollback` argument when executing the pipeline. This is particularly handy for failed builds, allowing you to quickly rollback without undeploying the entire application.
+The `.rollback` modifier can be used after a stage and is triggered with the `--rollback` argument when executing the pipeline. This is particularly handy for failed builds, allowing you to quickly rollback without undeploying the entire application.
 
 #### Rollback Usage
 
-To define a rollback stage in your pipeline, add the `.rollback` modifier after a build stage. Here’s an example:
+To define a rollback stage in your pipeline, add the `.rollback` modifier after a stage. Here’s an example:
 
 ```yaml
 build:
@@ -185,7 +185,32 @@ You can trigger the rollback stage by executing the pipeline with the --rollback
 pipeline build --rollback
 ```
 
-Combine this with the predefined environment variables or your own and it can be very powerful.
+Combine this with the predefined environment variables or your own system variables.
+
+Multiple stages can have the modifier and can be called together:
+
+```yaml
+build:
+  - echo "hello"
+build.rollback:
+  - echo "lorem"
+deploy:
+  - echo "world"
+deploy.rollback:
+  - echo "ipsum"
+```
+
+Running the `build` and `deploy` stages in the example provided results in printing `hello` and then printing `world`.
+
+```sh
+pipeline build deploy
+```
+
+Running the `build` and `deploy` stages with the `--rollback` argument in the example provided results in printing `lorem` and then printing `ipsum`.
+
+```sh
+pipeline build deploy --rollback
+```
 
 ## Contributing
 
