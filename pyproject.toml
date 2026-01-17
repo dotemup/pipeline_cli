@@ -1,0 +1,32 @@
+[project]
+name = "pipeline-cli"
+readme = "README.md"
+requires-python = ">=3.14"
+version='1.0.0'
+
+dependencies = [
+    "PyYAML"
+]
+
+[dependency-groups]
+test = [
+    "pytest",
+    "pytest-cov"
+]
+
+[project.scripts]
+pipeline = "pipeline_cli.entrypoint:main"
+
+[tool.pytest]
+addopts = [
+    "--cov",
+    "--cov-fail-under=80",
+]
+testpaths = ["tests"]
+
+[tool.coverage.paths]
+source = ["src/"]
+
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"

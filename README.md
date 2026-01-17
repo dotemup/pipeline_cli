@@ -10,8 +10,8 @@ This project automates workflows similar to CI/CD processes, allowing users to d
 
 ## Requirements
 
-- Python 3.6+
-- PyYAML
+- Python 3.14+
+- [uv](https://docs.astral.sh/uv/) package manager
 
 ## Installation
 
@@ -22,10 +22,22 @@ git clone https://github.com/dotemup/pipeline_cli.git
 cd pipeline_cli
 ```
 
-Install the package:
+Install the package and dependencies:
 
 ```bash
-pip install .
+uv sync
+```
+
+For development with testing dependencies:
+
+```bash
+uv sync --group test
+```
+
+To install the package globally:
+
+```bash
+uv pip install .
 ```
 
 ## Usage
